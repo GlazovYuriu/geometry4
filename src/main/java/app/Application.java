@@ -131,10 +131,14 @@ public class Application implements Consumer<Event> {
         } else if (e instanceof EventWindowCloseRequest) {
             window.close();
         } else if (e instanceof EventFrameSkija ee) {
+            // получаем поверхность рисования
             Surface s = ee.getSurface();
-            paint(s.getCanvas(), new CoordinateSystem2i(0, 0, s.getWidth(), s.getHeight())
-            );
+            // очищаем её канвас заданным цветом
+            paint(s.getCanvas(), new CoordinateSystem2i(s.getWidth(), s.getHeight()));
         }
+        panelControl.accept(e);
+        panelRendering.accept(e);
+        panelLog.accept(e);
     }
 
     /**
@@ -154,5 +158,6 @@ public class Application implements Consumer<Event> {
         panelLog.paint(canvas, windowCS);
         panelHelp.paint(canvas, windowCS);
         canvas.restore();
+
     }
 }
