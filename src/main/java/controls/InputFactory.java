@@ -28,6 +28,14 @@ public class InputFactory {
             input.focused = false;
     }
     /**
+     * группа индексов для переключения по tab
+     */
+    private static final List<Integer> tabGroup = new ArrayList<>();
+    /**
+     * положение в tab группе
+     */
+    private static int tabPos = 0;
+    /**
      * флаг, нужно ли рисовать курсоа
      */
     private static boolean cursorDraw = true;
@@ -42,6 +50,7 @@ public class InputFactory {
             }
         }, 0, 500);
     }
+
 
     /**
      * Получить новое поле ввода
@@ -59,19 +68,40 @@ public class InputFactory {
      * @param text            начальный текст
      * @param vcentered       флаг, нужно ли выравнивать текст по центру по вертикали
      * @param textColor       цвет текста
+     * @param addToTabGroup   флаг, нужно ли добавить это поле в tab группу
      * @return Новое поле ввода
      */
     public static Input getInput(
             Window window, boolean drawBG, int backgroundColor, int padding,
             int gridWidth, int gridHeight, int gridX, int gridY, int colspan,
-            int rowspan, String text, boolean vcentered, int textColor
+            int rowspan, String text, boolean vcentered, int textColor,
+            boolean addToTabGroup
     ) {
         Input input = new Input(
                 window, drawBG, backgroundColor, padding, gridWidth, gridHeight,
                 gridX, gridY, colspan, rowspan, text, vcentered, textColor);
         inputs.add(input);
+        if (addToTabGroup) {
+            tabGroup.add(inputs.size() - 1);
+        }
+
+        // изначально ничего не выбрано, по первому tab
+        // положение станет равным нулю, и мы получим первый
+        // элемент tab группы
+        tabPos = -1;
 
         return input;
+    }
+    /**
+     * Следующий элемент
+     */
+    public static void nextTab() {
+        if (tabGroup.isEmpty())
+            return;
+        tabPos++;
+        if (tabPos > tabGroup.size() - 1)
+            tabPos = 0;
+        inputs.get(tabGroup.get(tabPos)).setFocus();
     }
 
     /**
