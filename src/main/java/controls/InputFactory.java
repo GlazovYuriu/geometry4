@@ -20,6 +20,14 @@ public class InputFactory {
      */
     private static final Timer timer = new Timer(true);
     /**
+     * Снять фокус со всех полей ввода
+     */
+    public static void defocusAll() {
+        // снимаем фокусы
+        for (Input input : inputs)
+            input.focused = false;
+    }
+    /**
      * флаг, нужно ли рисовать курсоа
      */
     private static boolean cursorDraw = true;

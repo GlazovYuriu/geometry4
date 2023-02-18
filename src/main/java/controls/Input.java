@@ -20,9 +20,32 @@ public class Input extends GridPanel {
      */
     String text;
     /**
+     * флаг, помещён ли сейчас фокус на это поле ввода
+     * (модификатор доступа по умолчанию, чтобы был доступен
+     * фабрике InputFactory внутри пакета)
+     */
+    boolean focused = false;
+    /**
      * Смещение для красивого отображения текста
      */
     private static final int LOCAL_PADDING = 8;
+    /**
+     * Установить фокус на это поле ввода
+     */
+    public void setFocus() {
+        // снимаем фокус со всех полей ввода
+        InputFactory.defocusAll();
+        // выделяем текущее поле ввода
+        this.focused = true;
+    }
+    /**
+     * Возвращает флаг, установлен ли фокус на это поле ввода
+     *
+     * @return флаг
+     */
+    public boolean isFocused() {
+        return focused;
+    }
     /**
      * Флаг, нужно ли выравнивать текст по центру по вертикали
      */
@@ -64,7 +87,7 @@ public class Input extends GridPanel {
     /**
      * Метод под рисование в конкретной реализации
      *
-     * @param canvas   область рисования
+     * @param canvas область рисования
      * @param windowCS СК окна
      */
     @Override
@@ -94,7 +117,7 @@ public class Input extends GridPanel {
                 // рисуем линию текста
                 canvas.drawTextLine(line, 0, 0, paint);
                 // если время рисовать курсор
-                if (InputFactory.cursorDraw()) {
+                if (focused && InputFactory.cursorDraw()) {
                     // смещаем область рисования
                     canvas.translate(line.getWidth(), 0);
                     // рисуем его
